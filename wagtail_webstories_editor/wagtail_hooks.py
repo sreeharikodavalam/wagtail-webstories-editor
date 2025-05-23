@@ -3,10 +3,10 @@ import json
 from django.urls import path, reverse_lazy
 from wagtail import hooks
 from wagtail.log_actions import log
-from wagtail.snippets.action_menu import DeleteMenuItem
 from wagtail.snippets.models import register_snippet
 from wagtail.snippets.views.snippets import SnippetViewSet, EditView, CreateView
 
+from .action_menu import DeleteMenuItem
 from .models import WebStory, WebStoriesSetting
 from .utils import add_video_cache, add_google_analytics
 from .views import (
