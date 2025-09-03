@@ -5,18 +5,17 @@
 {% block bodyclass %}webstory-editor{% endblock %}
 {% block content %}
     {% include 'wagtailadmin/shared/headers/slim_header.html' %}
-    <div style="display: flex;flex-direction: column;height: 100%">
-        <div id="webstory-editor-container" style="flex: 1;height: 100%"></div>
+    <div style="display: flex;flex-direction: column; height: calc(100% - 60px);">
+        <div id="webstory-editor-container" style="flex: 1; height: 100%;"></div>
     </div>
+
 
     <form action="{{ action_url }}" method="POST" novalidate{% if form.is_multipart %}
           enctype="multipart/form-data"{% endif %} data-edit-form>
         {% csrf_token %}
-
         <div style="display: none">
             {{ panel.render_form_content }}
         </div>
-
         <footer class="footer">
             <nav aria-label="{% trans 'Actions' %}">
                 <ul>
@@ -38,6 +37,17 @@
     {{ media.css }}
 
     <style>
+    #webstory-editor-container {
+    height: calc(100% - 60px) !important; /* leave space for footer */
+    overflow: auto;
+    padding-bottom: 10px;
+}
+
+.webstory-editor .footer {
+    position: relative;
+    z-index: 100;
+    margin-top: auto;
+}
         .webstory-editor .content-wrapper .content {
             height: 100%;
             padding: 0 !important;
@@ -73,7 +83,6 @@
             border-radius: 4px;
             box-sizing: border-box;
         }
-
     </style>
 
 
@@ -110,7 +119,6 @@
         const elementId = "webstory-editor-container"
         const apiImagesUrl = "{% url 'wagtailapi:images:listing' %}";
         const apiMediaUrl = "{% url 'wagtailapi:media:listing' %}";
-
         window.mediaAudioChooserUrl = "{% url 'wagtailmedia:chooser_typed' media_type='audio' %}"
         window.mediaVideoChooserUrl = "{% url 'wagtailmedia:chooser_typed' media_type='video' %}"
         window.imageChooserUrl = "{{ imageChooserUrl }}";
@@ -118,11 +126,7 @@
         window.wagtailImageApiUrl = "{% url 'wagtailapi:images:listing' %}";
         window.wagtailMediaApiUrl = "{% url 'wagtailapi:media:listing' %}";
         window.wagtailDocumentApiUrl = "{% url 'wagtailapi:documents:listing' %}";
-
-
         const savedConfig = {{ editorConfig|safe }};
-
-
         const getMedia = async ({mediaType, searchTerm}) => {
             let media
             if (mediaType === "video") {
@@ -130,8 +134,6 @@
             } else {
                 media = await getImages(apiImagesUrl)
             }
-
-
             return {
                 data: media.items,
                 headers: {
@@ -144,18 +146,14 @@
             const storyData = WebStories.getStorySaveData(story)
             const {content, ...rest} = storyData
             const {title: {raw: storyTitle}} = rest
-
             if (storyTitle) {
                 $("#id_title").val(storyTitle)
             } else {
                 rest.title.raw = $("#id_title").val()
             }
-
             $("#id_config").val(JSON.stringify(rest))
             $("#id_html").val(content)
-
         }
-
         const editorConfig = {
             ...savedConfig,
             apiCallbacks: {
@@ -185,21 +183,15 @@
                 caption: ['text/vtt'],
             }
         }
-
-
         const options = {
             serviceWorkerScriptUrl,
             storyId: null,
         }
-
         // empty story
         const initialEdits = {story: {}}
-
         $(document).ready(() => {
             // initialize editor
             WebStories.initializeStoryEditor(elementId, editorConfig, initialEdits, options)
         })
-
-
     </script>
 {% endblock %}

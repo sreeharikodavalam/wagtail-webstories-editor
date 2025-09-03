@@ -1,6 +1,0 @@
-Django==5.2.1
-django-cors-headers==4.3.0
-wagtail==7.0
-wagtail-icon-chooser==0.0.5
-wagtail-webstories-editor
-wagtailmedia==0.16.0
